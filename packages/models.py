@@ -10,7 +10,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    ver_code = Column(String)
+    usertype= Column(String,nullable=False) #admin,user...
 
 class Scan(Base):
     __tablename__="scan"
