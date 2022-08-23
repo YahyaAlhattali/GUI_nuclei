@@ -1,0 +1,4 @@
+mail.rop.gov.om
+webmail.rop.gov.om
+www.procurement.rop.gov.om
+www.imaap.rop.gov.om
