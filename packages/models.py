@@ -6,11 +6,11 @@ from datetime import datetime
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True,autoincrement=True)
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-    usertype= Column(String,nullable=False) #admin,user...
+    usertype= Column(String,default="user") #admin,user...
 
 class Scan(Base):
     __tablename__="scan"
