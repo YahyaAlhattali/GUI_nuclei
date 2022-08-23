@@ -2,7 +2,7 @@ from typing import Union
 import json
 from datetime import datetime, timedelta
 from typing import List
-
+import time
 import subdomainfinder
 import users
 from sqlalchemy.orm import Session
@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from packages.database import engine, SessionLocal
 from packages import crud, models, schemas
 from packages import models
-from fastapi import Depends, FastAPI, HTTPException, status,Request
+from fastapi import Depends, FastAPI, HTTPException, status,Request,BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 models.Base.metadata.create_all(bind=engine)
 import validators
@@ -84,3 +84,14 @@ async def target(targets : schemas.Domains):
         "status" : "SUCCESS",
         "data" : "Added"
         }
+@app.post("/background")
+async def background(background: str,back: BackgroundTasks ):
+ back.add_task(pr)
+ return("nuclei Started")
+
+
+def pr():
+ #time.sleep(60)
+ #print("Sleeep")
+ subprocess.check_output("./tools/nuclei -t /home/ya7ya/nuclei-templates/cves/2022 -l hxsub.txt ", shell=True)
+
