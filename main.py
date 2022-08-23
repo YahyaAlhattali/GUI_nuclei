@@ -93,5 +93,7 @@ async def background(background: str,back: BackgroundTasks ):
 def pr():
  #time.sleep(60)
  #print("Sleeep")
+
+
  subprocess.check_output("./tools/nuclei -t /home/ya7ya/nuclei-templates/cves/2022 -l hxsub.txt ", shell=True)
 
