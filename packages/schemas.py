@@ -51,11 +51,32 @@ class UserInDB(User):
 
 class Domains(BaseModel):
     domains: List[str]
+
     class Config:
         schema_extra = {
             "example": {
             "domains":["https://www.rop.gov.om","https://www.evisa.rop.gov.om","https://webmail.rop.gov.om","https://mail.rop.gov.om"]
+            }
+        }
+def json(value):
+    return True
+class NucleiConfig(BaseModel):
+    #config: List[str]
+    time_delay: int
+    templates : List[str]
+    severty : List[str]
+    domains : List[str]
+
+    class Config:
+                schema_extra = {
+                    "example": {
+
+                            "time_delay": 5,
+                            "templates": ["templates1", "templates2"],
+                            "severty": ["Critical", "Medium", "Low", "Info"],
+                            "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"]
 
 
-                     }}
+                    }
+                }
 

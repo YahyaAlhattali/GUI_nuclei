@@ -75,25 +75,36 @@ def sub(domain: str,current_user: schemas.User = Depends(users.get_current_activ
 @app.post("/targetscan")
 async def target(targets : schemas.Domains):
 
-    # for value in json_loads.values:
-    # print(str(json_loads[value])+"\n")
      for domain in targets.domains:
-        #print(domain)
+
         subprocess.check_output("echo "+domain+" >>/temp_files/urlsScan.txt",shell=True)
      return {
         "status" : "SUCCESS",
         "data" : "Added"
         }
-@app.post("/background")
-async def background(background: str,back: BackgroundTasks ):
- back.add_task(pr)
+
+@app.post("/nuclei")
+async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ):
+ back.add_task(run_nuclei,config)
  return("nuclei Started")
 
+def run_nuclei(conf: schemas.NucleiConfig):
+    subprocess.check_output("rm -f ./temp_files/urlsScan.txt", shell=True)
+    for domain in conf.domains: #Adding targets to file to be readed later
+        subprocess.check_output("echo " + domain + " >>./temp_files/urlsScan.txt", shell=True)
 
-def pr():
- #time.sleep(60)
- #print("Sleeep")
+    severtys = str(conf.severty).replace("[",'').replace("]",'').replace("'",'').replace(" ",'')
 
+    #if not severtys == 'None':
 
- subprocess.check_output("./tools/nuclei -t /home/ya7ya/nuclei-templates/cves/2022 -l hxsub.txt ", shell=True)
+    for selected_templates in conf.domains:
+        if selected_templates == "None":
+           templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
+           break
+        else:
+            subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
+    #subprocess.check_output("cat ./temp_files/selected_temps.txt", shell=True)
 
+      #./nuclei -u https://sfzco.com -t /home/ya7ya/nuclei-templates/exposures/backups/zip-backup-files.yaml -json -o test.txt
+
+# As a first domain name make directory with random numbers for storing selected templates temporary
