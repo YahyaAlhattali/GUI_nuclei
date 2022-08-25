@@ -61,7 +61,7 @@ class Domains(BaseModel):
 def json(value):
     return True
 class NucleiConfig(BaseModel):
-    #config: List[str]
+    scan_name: str
     time_delay: int
     templates : List[str]
     severty : List[str]
@@ -70,7 +70,7 @@ class NucleiConfig(BaseModel):
     class Config:
                 schema_extra = {
                     "example": {
-
+                            "scan_name":"RopScan",
                             "time_delay": 5,
                             "templates": ["templates1", "templates2"],
                             "severty": ["Critical", "Medium", "Low", "Info"],

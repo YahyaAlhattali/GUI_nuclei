@@ -16,6 +16,7 @@ class Scan(Base):
     __tablename__="scan"
     id= Column(Integer, primary_key=True,index=True,autoincrement=True)
     domain = Column(String, index=True)
+    name =Column(String,index=True)
     time_started= Column(DateTime, default=datetime.utcnow())
     time_finshed=Column(DateTime,index=True)
     progress_status =Column(String,index=True)

@@ -1,5 +1,6 @@
 from typing import Union
 import json
+import functions
 from datetime import datetime, timedelta
 from typing import List
 import time
@@ -89,21 +90,49 @@ async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ):
  return("nuclei Started")
 
 def run_nuclei(conf: schemas.NucleiConfig):
-    subprocess.check_output("rm -f ./temp_files/urlsScan.txt", shell=True)
-    for domain in conf.domains: #Adding targets to file to be readed later
-        subprocess.check_output("echo " + domain + " >>./temp_files/urlsScan.txt", shell=True)
 
-    severtys = str(conf.severty).replace("[",'').replace("]",'').replace("'",'').replace(" ",'')
+    urlsList = functions.makefilename(conf.scan_name)+".txt"
+    selected_tmp =functions.makefilename(conf.scan_name)+"selected.txt"
 
-    #if not severtys == 'None':
-
-    for selected_templates in conf.domains:
-        if selected_templates == "None":
-           templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
-           break
+    severtys = str(conf.severty).replace("[", '').replace("]", '').replace("'", '').replace(" ", '')
+    if 'None' not in severtys:
+        severtys ="-s "+severtys
+    for ts in conf.templates:
+        if ts == 'None':
+         templates = functions.default_path(conf.scan_name)
+         tsp = 'D'
+         break
         else:
-            subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
-    #subprocess.check_output("cat ./temp_files/selected_temps.txt", shell=True)
+            tsp ='S'
+            subprocess.check_output("echo " + ts + " >>./temp_files/"+ selected_tmp , shell=True)
+
+    if tsp == 'D':
+        tsp = templates
+    else:
+        if tsp == 'S':
+         tsp = selected_tmp
+
+    print(tsp)
+
+
+
+    # for domain in conf.domains: #Adding targets to file to be readed later
+    #     subprocess.check_output("echo " + domain + " >>./temp_files/"+urlsList, shell=True)
+    #
+    #
+    #
+    # #if not severtys == 'None':
+    #
+    # for selected_templates in conf.domains:
+    #     if selected_templates == "None":
+    #        templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
+    #        break
+    #     else:
+    #         subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
+
+
+#subprocess.check_output("rm -f ./temp_files/urlsScan.txt", shell=True)
+#subprocess.check_output("cat ./temp_files/selected_temps.txt", shell=True)
 
       #./nuclei -u https://sfzco.com -t /home/ya7ya/nuclei-templates/exposures/backups/zip-backup-files.yaml -json -o test.txt
 
