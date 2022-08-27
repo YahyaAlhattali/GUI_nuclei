@@ -17,3 +17,17 @@ def default_path(temp):
     subprocess.check_output("find tools/nuclei_uploaded/DefaultTemplates/ -name *.yaml >>temp_files/"+Default_templates_path , shell=True)
 
     return (Default_templates_path)
+####################################################################################################
+import json
+def results_to_db(result):
+#input file
+ fin = open(result, "rt")
+
+
+ for line in fin:
+  #print (type(line))
+  json_object = json.loads(line)
+  #data = json.loads(json_object)
+  print (json_object["host"])
+
+

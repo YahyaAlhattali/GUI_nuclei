@@ -1,6 +1,15 @@
-from functions import default_path
-import subprocess
-temp = default_path("test")
-subprocess.check_output("cat " +temp , shell=True)
+import json
+
+#input file
+fin = open("/home/ya7ya/results", "rt")
+
+
+for line in fin:
+ #print (type(line))
+ json_object = json.loads(line)
+ #data = json.loads(json_object)
+ print (json_object["host"])
+
+
 
 

@@ -116,19 +116,19 @@ def run_nuclei(conf: schemas.NucleiConfig):
 
 
 
-    # for domain in conf.domains: #Adding targets to file to be readed later
-    #     subprocess.check_output("echo " + domain + " >>./temp_files/"+urlsList, shell=True)
-    #
-    #
-    #
-    # #if not severtys == 'None':
-    #
-    # for selected_templates in conf.domains:
-    #     if selected_templates == "None":
-    #        templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
-    #        break
-    #     else:
-    #         subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
+    for domain in conf.domains: #Adding targets to file to be readed later
+        subprocess.check_output("echo " + domain + " >>./temp_files/"+urlsList, shell=True)
+
+
+
+    #if not severtys == 'None':
+
+    for selected_templates in conf.domains:
+        if selected_templates == "None":
+           templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
+           break
+        else:
+            subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
 
 
 #subprocess.check_output("rm -f ./temp_files/urlsScan.txt", shell=True)
