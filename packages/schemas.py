@@ -70,12 +70,13 @@ class NucleiConfig(BaseModel):
     class Config:
                 schema_extra = {
                     "example": {
+                            "main_domain":"rop.gov.om",
                             "scan_name":"RopScan",
                             "time_delay": 5,
                             "templates": ["templates1", "templates2"],
                             "severty": ["Critical", "Medium", "Low", "Info"],
-                            "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"]
-
+                            "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"],
+                            "description":"Description of the scan"
 
                     }
                 }

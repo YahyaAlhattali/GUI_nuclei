@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from typing import Union
 import json
 import functions
@@ -91,44 +93,51 @@ async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ):
 
 def run_nuclei(conf: schemas.NucleiConfig):
 
-    urlsList = functions.makefilename(conf.scan_name)+".txt"
-    selected_tmp =functions.makefilename(conf.scan_name)+"selected.txt"
+    urlsList = "./temp_files/"+functions.makefilename(conf.scan_name)+".txt"
+    selected_tmp ="./temp_files/"+functions.makefilename(conf.scan_name)+"selected.txt"
+    results= "./temp_files/"+functions.makefilename(conf.scan_name)+"results.txt"
 
     severtys = str(conf.severty).replace("[", '').replace("]", '').replace("'", '').replace(" ", '')
     if 'None' not in severtys:
         severtys ="-s "+severtys
+    else:
+        severtys=''
     for ts in conf.templates:
         if ts == 'None':
-         templates = functions.default_path(conf.scan_name)
+         templates = f'./temp_files/{functions.default_path(conf.scan_name)}'
          tsp = 'D'
          break
         else:
             tsp ='S'
-            subprocess.check_output("echo " + ts + " >>./temp_files/"+ selected_tmp , shell=True)
+            subprocess.check_output("echo " + ts + " >>"+ selected_tmp , shell=True)
 
     if tsp == 'D':
         tsp = templates
     else:
         if tsp == 'S':
          tsp = selected_tmp
-
-    print(tsp)
-
-
+         severtys = ''
 
     for domain in conf.domains: #Adding targets to file to be readed later
-        subprocess.check_output("echo " + domain + " >>./temp_files/"+urlsList, shell=True)
+        subprocess.check_output("echo " + domain + " >>"+urlsList, shell=True)
+
+    fetch_temp = open(tsp, "rt")
+    crud.add_scan(users.get_db(),conf)
+    for line in fetch_temp:
+
+        cmd=f'./tools/nuclei -l {urlsList} -t {line.strip()} -json -o {results} {severtys}'
+
+        #print (cmd)
+        os.system(cmd)
+        if Path(results).is_file():
+            crud.vulns_to_db(users.get_db(),results,conf.scan_name) #Pass Results to database
+            subprocess.check_output("rm " + results, shell=True)
+        time.sleep(conf.time_delay)
 
 
+    #clear temp files
+    subprocess.check_output("rm " + urlsList+" "+ tsp, shell=True)
 
-    #if not severtys == 'None':
-
-    for selected_templates in conf.domains:
-        if selected_templates == "None":
-           templates_file = "./tools/nuclei_uploaded/DefaultTemplates"
-           break
-        else:
-            subprocess.check_output("echo "+ selected_templates+ " >>./temp_files/selected_temps.txt",shell=True)
 
 
 #subprocess.check_output("rm -f ./temp_files/urlsScan.txt", shell=True)

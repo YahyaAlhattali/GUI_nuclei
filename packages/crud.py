@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session
-
+import json
 import main
 from . import models, schemas
 
@@ -36,3 +36,29 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+def add_scan(db: Session,scan_data):
+    scan=models.Scan(main_domain=scan_data.main_domain,scan_name=scan_data.scan_name,progress_status=scan_data.progress_status,description)
+    db.add(scan)
+    db.commit()
+    db.refresh(scan)
+
+def vulns_to_db(db: Session,result,scan_name):
+#input file
+ fin = open(result, "rt")
+
+
+ for line in fin:
+      #print (type(line))
+      json_object = json.loads(line)
+      #data = json.loads(json_object)
+
+      db_item = models.Vulnerabilities(Type=json_object["host"],scan_id=scan_name)
+      db.add(db_item)
+      db.commit()
+      db.refresh(db_item)
+      print(f'{json_object["host"]} {json_object["info"]["name"]}')
+      return db_item
+
+
+
+

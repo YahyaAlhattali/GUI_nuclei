@@ -15,13 +15,12 @@ class User(Base):
 class Scan(Base):
     __tablename__="scan"
     id= Column(Integer, primary_key=True,index=True,autoincrement=True)
-    domain = Column(String, index=True)
-    name =Column(String,index=True)
+    main_domain = Column(String, index=True)
+    scan_name =Column(String,index=True)
     time_started= Column(DateTime, default=datetime.utcnow())
     time_finshed=Column(DateTime,index=True)
     progress_status =Column(String,index=True)
     description= Column(Text,index=True)
-    template_used= Column(String,index=True)
     user_id=Column(Integer,ForeignKey("users.id"))
     logs= relationship("Logs",cascade="all, delete")
     vulns = relationship("Vulnerabilities",cascade="all, delete")
@@ -36,6 +35,7 @@ class Vulnerabilities(Base):
     Vulnerable_URL= Column(String, index=True)
     Description= Column(String, index=True)
     Discovered_on= Column(String, index=True)
+    template_used = Column(String, index=True)
     scan_id=Column(Integer, ForeignKey("scan.id",ondelete="CASCADE"))
 
 class Logs(Base):
