@@ -54,7 +54,7 @@ def vulns_to_db(db: Session,result,scan_id):
       #data = json.loads(json_object)
       #if json_object["info"]["CVSS_Score"] not in json_object: cvss ='None'
 
-      db_item = models.Vulnerabilities(scan_id=scan_id,Type=json_object["host"],Vulnerable_URL=json_object["matched-at"],Description=json_object["info"]["description"],Severity=json_object["info"]["severity"],template_used=json_object["template-id"])
+      db_item = models.Vulnerabilities(scan_id=scan_id,Type=json_object["type"],Title=json_object["info"]["name"],Vulnerable_URL=json_object["matched-at"],Description=json_object["info"]["description"],Severity=json_object["info"]["severity"],template_used=json_object["template-id"])
       db.add(db_item)
       db.commit()
       db.refresh(db_item)

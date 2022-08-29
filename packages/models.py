@@ -34,7 +34,7 @@ class Vulnerabilities(Base):
     CVE_CWE= Column(String, index=True)
     Vulnerable_URL= Column(String, index=True)
     Description= Column(String, index=True)
-    Discovered_on= Column(String, index=True)
+    Discovered_on= Column(DateTime, default=datetime.utcnow())
     template_used = Column(String, index=True)
     scan_id=Column(Integer, ForeignKey("scan.id",ondelete="CASCADE"))
 

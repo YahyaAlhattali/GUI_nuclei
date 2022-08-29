@@ -115,7 +115,7 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
     scan_db=crud.add_scan(db,conf,user)
     for line in fetch_temp:
 
-        cmd=f'./tools/nuclei -l {urlsList} -t {line.strip()} -json -o {results} {severtys}'
+        cmd=f'./tools/nuclei -duc -l {urlsList} -t {line.strip()} -json -o {results} {severtys}'
 
         #print (cmd)
         os.system(cmd)
