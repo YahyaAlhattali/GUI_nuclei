@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from typing import List
 
+import users
+
+
 class ItemBase(BaseModel):
     title: str
     description: str | None = None
@@ -66,6 +69,10 @@ class NucleiConfig(BaseModel):
     templates : List[str]
     severty : List[str]
     domains : List[str]
+    main_domain : str
+    description : str
+    progress_status : str
+
 
     class Config:
                 schema_extra = {
@@ -73,10 +80,11 @@ class NucleiConfig(BaseModel):
                             "main_domain":"rop.gov.om",
                             "scan_name":"RopScan",
                             "time_delay": 5,
-                            "templates": ["templates1", "templates2"],
+                            "templates": ["./tools/nuclei_uploaded/DefaultTemplates/misconfiguration/http-missing-security-headers.yaml"],
                             "severty": ["Critical", "Medium", "Low", "Info"],
                             "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"],
-                            "description":"Description of the scan"
+                            "description":"Description of the scan",
+                             "progress_status":"0",
 
                     }
                 }

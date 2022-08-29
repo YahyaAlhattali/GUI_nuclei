@@ -75,23 +75,13 @@ def sub(domain: str,current_user: schemas.User = Depends(users.get_current_activ
     return subdomainfinder.sub(domain,current_user)
 
 
-@app.post("/targetscan")
-async def target(targets : schemas.Domains):
-
-     for domain in targets.domains:
-
-        subprocess.check_output("echo "+domain+" >>/temp_files/urlsScan.txt",shell=True)
-     return {
-        "status" : "SUCCESS",
-        "data" : "Added"
-        }
 
 @app.post("/nuclei")
-async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ):
- back.add_task(run_nuclei,config)
+async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ,current_user: schemas.User = Depends(users.get_current_active_user),db :Session= Depends(users.get_db)):
+ back.add_task(run_nuclei,db,config,current_user)
  return("nuclei Started")
 
-def run_nuclei(conf: schemas.NucleiConfig):
+def run_nuclei(db,conf: schemas.NucleiConfig,user):
 
     urlsList = "./temp_files/"+functions.makefilename(conf.scan_name)+".txt"
     selected_tmp ="./temp_files/"+functions.makefilename(conf.scan_name)+"selected.txt"
@@ -122,7 +112,7 @@ def run_nuclei(conf: schemas.NucleiConfig):
         subprocess.check_output("echo " + domain + " >>"+urlsList, shell=True)
 
     fetch_temp = open(tsp, "rt")
-    crud.add_scan(users.get_db(),conf)
+    scan_db=crud.add_scan(db,conf,user)
     for line in fetch_temp:
 
         cmd=f'./tools/nuclei -l {urlsList} -t {line.strip()} -json -o {results} {severtys}'
@@ -130,7 +120,7 @@ def run_nuclei(conf: schemas.NucleiConfig):
         #print (cmd)
         os.system(cmd)
         if Path(results).is_file():
-            crud.vulns_to_db(users.get_db(),results,conf.scan_name) #Pass Results to database
+            crud.vulns_to_db(db,results,scan_db.id) #Pass Results to database
             subprocess.check_output("rm " + results, shell=True)
         time.sleep(conf.time_delay)
 
