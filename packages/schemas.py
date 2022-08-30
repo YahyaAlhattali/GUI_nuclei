@@ -79,8 +79,8 @@ class NucleiConfig(BaseModel):
                     "example": {
                             "main_domain":"rop.gov.om",
                             "scan_name":"RopScan",
-                            "time_delay": 5,
-                            "templates": ["./tools/nuclei_uploaded/DefaultTemplates/misconfiguration/http-missing-security-headers.yaml"],
+                            "time_delay": 0,
+                            "templates": ["None"],
                             "severty": ["Critical", "Medium", "Low", "Info"],
                             "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"],
                             "description":"Description of the scan",

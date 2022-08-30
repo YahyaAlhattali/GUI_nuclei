@@ -1,3 +1,4 @@
+import math
 import os
 from pathlib import Path
 from typing import Union
@@ -88,13 +89,14 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
     results= "./temp_files/"+functions.makefilename(conf.scan_name)+"results.txt"
 
     severtys = str(conf.severty).replace("[", '').replace("]", '').replace("'", '').replace(" ", '')
-    if 'None' not in severtys:
-        severtys ="-s "+severtys
-    else:
-        severtys=''
+
+
     for ts in conf.templates:
         if ts == 'None':
-         templates = f'./temp_files/{functions.default_path(conf.scan_name)}'
+         temps= functions.default_path(conf.scan_name,severtys)
+         templates =f'./temp_files/{temps[0]}'
+         total= temps[1]
+         print(templates)
          tsp = 'D'
          break
         else:
@@ -103,21 +105,22 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
 
     if tsp == 'D':
         tsp = templates
+
     else:
         if tsp == 'S':
          tsp = selected_tmp
-         severtys = ''
+
 
     for domain in conf.domains: #Adding targets to file to be readed later
         subprocess.check_output("echo " + domain + " >>"+urlsList, shell=True)
 
     fetch_temp = open(tsp, "rt")
     scan_db=crud.add_scan(db,conf,user)
-    for line in fetch_temp:
+    for index,line in enumerate(fetch_temp):
 
-        cmd=f'./tools/nuclei -duc -l {urlsList} -t {line.strip()} -json -o {results} {severtys}'
-
-        #print (cmd)
+        cmd=f'./tools/nuclei -duc -l {urlsList} -t {line.strip()} -json -o {results}'
+        progress = (index / int(total)) * 100
+        print(math.trunc(int(progress)))
         os.system(cmd)
         if Path(results).is_file():
             crud.vulns_to_db(db,results,scan_db.id) #Pass Results to database
@@ -126,7 +129,7 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
 
 
     #clear temp files
-    subprocess.check_output("rm " + urlsList+" "+ tsp, shell=True)
+    subprocess.check_output("rm " + urlsList+" "+ tsp +" "+urlsList, shell=True)
 
 
 
