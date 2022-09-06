@@ -1,1 +1,0 @@
-./tools/nuclei_uploaded/DefaultTemplates/misconfiguration/http-missing-security-headers.yaml

@@ -1,3 +1,5 @@
 alembic
 asyncpg
 validators
+rq
+rq-dashboard

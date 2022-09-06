@@ -13,12 +13,14 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 from packages.database import engine, SessionLocal
 from packages import crud, models, schemas
-from packages import models
 from fastapi import Depends, FastAPI, HTTPException, status,Request,BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 models.Base.metadata.create_all(bind=engine)
 import validators
 import subprocess
+from redis import Redis
+from rq import Queue
+import time
 
 
 app = FastAPI()
@@ -30,7 +32,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+redis_conn = Redis()
+q = Queue(connection=redis_conn)  # no args implies the default queue
 @app.post("/token", response_model=schemas.Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends(users.get_db)):
     user = users.authenticate_user(form_data.username, form_data.password,db)
@@ -78,22 +81,28 @@ def sub(domain: str,current_user: schemas.User = Depends(users.get_current_activ
 
 
 @app.post("/nuclei")
-async def backgrounded(config: schemas.NucleiConfig, back: BackgroundTasks ,current_user: schemas.User = Depends(users.get_current_active_user),db :Session= Depends(users.get_db)):
- back.add_task(run_nuclei,db,config,current_user)
- return("nuclei Started")
+async def start_new_scan(config: schemas.NucleiConfig ,current_user: schemas.User = Depends(users.get_current_active_user),db :Session= Depends(users.get_db)):
+ # back.add_task(run_nuclei,db,config,current_user)
+ job = q.enqueue(run_nuclei, config,current_user)
+ # job = q.enqueue( run_nuclei, config.dict(),current_user)
+ # blengbleng(config.scan_name)
+ return(f'nuclei job : ')
 
-def run_nuclei(db,conf: schemas.NucleiConfig,user):
+def blengbleng(name):
+    print (type(name))
+def run_nuclei(conf: schemas.NucleiConfig,user):
+    db=users.get_db()
 
-    urlsList = "./temp_files/"+functions.makefilename(conf.scan_name)+".txt"
-    selected_tmp ="./temp_files/"+functions.makefilename(conf.scan_name)+"selected.txt"
-    results= "./temp_files/"+functions.makefilename(conf.scan_name)+"results.txt"
+    urlsList = "./temp_files/"+functions.makefilename(conf["scan_name"])+".txt"
+    selected_tmp ="./temp_files/"+functions.makefilename(conf["scan_name"])+"selected.txt"
+    results= "./temp_files/"+functions.makefilename(conf["scan_name"])+"results.txt"
 
-    severtys = str(conf.severty).replace("[", '').replace("]", '').replace("'", '').replace(" ", '')
+    severtys = str(conf["severty"]).replace("[", '').replace("]", '').replace("'", '').replace(" ", '')
 
 
-    for ts in conf.templates:
+    for ts in conf["templates"]:
         if ts == 'None':
-         temps= functions.default_path(conf.scan_name,severtys)
+         temps= functions.default_path(conf["scan_name"],severtys)
          templates =f'./temp_files/{temps[0]}'
          total= temps[1]
          print(templates)
@@ -111,7 +120,7 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
          tsp = selected_tmp
 
 
-    for domain in conf.domains: #Adding targets to file to be readed later
+    for domain in conf["domains"]: #Adding targets to file to be readed later
         subprocess.check_output("echo " + domain + " >>"+urlsList, shell=True)
 
     fetch_temp = open(tsp, "rt")
@@ -119,17 +128,18 @@ def run_nuclei(db,conf: schemas.NucleiConfig,user):
     for index,line in enumerate(fetch_temp):
 
         cmd=f'./tools/nuclei -duc -l {urlsList} -t {line.strip()} -json -o {results}'
-        progress = (index / int(total)) * 100
-        print(math.trunc(int(progress)))
+        progress = ((index+1) / int(total)) * 100
+        bar =math.trunc(int(progress))
+        print(f'{bar}%')
         os.system(cmd)
         if Path(results).is_file():
             crud.vulns_to_db(db,results,scan_db.id) #Pass Results to database
             subprocess.check_output("rm " + results, shell=True)
-        time.sleep(conf.time_delay)
+        time.sleep(conf["time_delay"])
 
 
     #clear temp files
-    subprocess.check_output("rm " + urlsList+" "+ tsp +" "+urlsList, shell=True)
+    subprocess.check_output(f'rm {urlsList} {tsp}', shell=True)
 
 
 
