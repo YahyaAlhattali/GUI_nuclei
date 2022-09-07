@@ -7,3 +7,6 @@ alembic stamp head
 =====Database GUI management======
 dbeaver
 bgadmin
+
+=============================================
+ rq worker  PycharmProjects/GUI_nuclei/main.py

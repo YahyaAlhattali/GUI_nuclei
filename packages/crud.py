@@ -42,7 +42,13 @@ def add_scan(db: Session,scan_data,user):
     db.commit()
     db.refresh(scan)
     return scan
-
+def update_scan_progress(db: Session,id,progress):
+    #scan =select(scan.progress_status).where(scan.id == id)
+    scan=models.Scan(progress_status=progress)
+    db.execute(scan)
+    db.commit()
+    db.refresh(scan)
+    return scan
 def vulns_to_db(db: Session,result,scan_id):
 #input file
  fin = open(result, "rt")
