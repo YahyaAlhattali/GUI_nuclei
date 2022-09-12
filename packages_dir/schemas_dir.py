@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import List
 
-import users
 
 
 class ItemBase(BaseModel):
@@ -29,7 +28,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str
 
-class User(BaseModel):
+class User_t(BaseModel):
     id: int
     username: str
     hashed_password: str
@@ -49,7 +48,7 @@ class TokenData(BaseModel):
 
 
 
-class UserInDB(User):
+class UserTInDB(User_t):
     hashed_password: str
 
 class Domains(BaseModel):
@@ -63,29 +62,30 @@ class Domains(BaseModel):
         }
 def json(value):
     return True
+
+
 class NucleiConfig(BaseModel):
     scan_name: str
     time_delay: int
-    templates : List[str]
-    severty : List[str]
-    domains : List[str]
-    main_domain : str
-    description : str
-    progress_status : str
-
+    templates: List[str]
+    severty: List[str]
+    domains: List[str]
+    main_domain: str
+    description: str
+    progress_status: str
 
     class Config:
-                schema_extra = {
-                    "example": {
-                            "main_domain":"rop.gov.om",
-                            "scan_name":"RopScan",
-                            "time_delay": 0,
-                            "templates": ["None"],
-                            "severty": ["Critical", "Medium", "Low", "Info"],
-                            "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om","https://webmail.rop.gov.om", "https://mail.rop.gov.om"],
-                            "description":"Description of the scan",
-                             "progress_status":"0",
-
+        schema_extra = {
+            "example": {
+                "main_domain": "rop.gov.om",
+                "scan_name": "RopScan",
+                "time_delay": 0,
+                "templates": ["None"],
+                "severty": ["Critical", "Medium", "Low", "Info"],
+                "domains": ["https://www.rop.gov.om", "https://www.evisa.rop.gov.om",
+                            "https://webmail.rop.gov.om", "https://mail.rop.gov.om"],
+                "description": "Description of the scan",
+                "progress_status": "0"
                     }
                 }
 

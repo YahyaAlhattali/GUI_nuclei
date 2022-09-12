@@ -9256,7 +9256,7 @@ requests:
       - type: word
         name: pear
         words:
-          - installed packages, channel pear
+          - installed packages_dir, channel pear
 
       - type: word
         name: pear

@@ -25,5 +25,5 @@ def default_path(temp,severtys):
 
     return (Default_templates_path,total)
 ####################################################################################################
-a= default_path("dd","High,Critical")
-print(a[1])
+#a= default_path("dd","High,Critical")
+#print(f'Templates Count: {a[1]}')

@@ -4,7 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 from sqlalchemy.ext.asyncio import AsyncEngine
-from packages import models
+from packages_dir import models_dir
 
 
 #------------------------------------------------------------#
@@ -32,7 +32,7 @@ fileConfig(config.config_file_name)
 #------------------------------------------------------------#
 # ---------------- changed code here -------------------------#
 # here target_metadata was equal to None
-target_metadata = models.Base.metadata
+target_metadata = models_dir.Base.metadata
 #------------------------------------------------------------#
 
 def run_migrations_offline():

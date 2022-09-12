@@ -20,7 +20,7 @@ requests:
         part: body
         words:
           - '[[source]]'
-          - '[packages]'
+          - '[packages_dir]'
         condition: and
 
       - type: status

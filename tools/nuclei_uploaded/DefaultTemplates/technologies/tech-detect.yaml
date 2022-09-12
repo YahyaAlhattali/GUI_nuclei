@@ -567,7 +567,7 @@ requests:
       - type: regex
         name: microsoft-word
         regex:
-          - (?:<html [^>]*xmlns:w="urn:schemas-microsoft-com:office:word"|<w:WordDocument>|<div [^>]*class="?WordSection1[" >]|<style[^>]*>[^>]*@page WordSection1)
+          - (?:<html [^>]*xmlns:w="urn:schemas_dir.py-microsoft-com:office:word"|<w:WordDocument>|<div [^>]*class="?WordSection1[" >]|<style[^>]*>[^>]*@page WordSection1)
         condition: or
         part: body
 
@@ -836,7 +836,7 @@ requests:
       - type: regex
         name: microsoft-powerpoint
         regex:
-          - (?:<html [^>]*xmlns:w="urn:schemas-microsoft-com:office:powerpoint"|<link rel="?Presentation-XML"? href="?[^"]+\.xml"?>|<o:PresentationFormat>[^<]+</o:PresentationFormat>[^!]+<o:Slides>\d+</o:Slides>(?:[^!]+<o:Version>([\d.]+)</o:Version>)?)
+          - (?:<html [^>]*xmlns:w="urn:schemas_dir.py-microsoft-com:office:powerpoint"|<link rel="?Presentation-XML"? href="?[^"]+\.xml"?>|<o:PresentationFormat>[^<]+</o:PresentationFormat>[^!]+<o:Slides>\d+</o:Slides>(?:[^!]+<o:Version>([\d.]+)</o:Version>)?)
         condition: or
         part: body
 
@@ -1529,7 +1529,7 @@ requests:
       - type: regex
         name: microsoft-excel
         regex:
-          - (?:<html [^>]*xmlns:w="urn:schemas-microsoft-com:office:excel"|<!--\s*(?:START|END) OF OUTPUT FROM EXCEL PUBLISH AS WEB PAGE WIZARD\s*-->|<div [^>]*x:publishsource="?Excel"?)
+          - (?:<html [^>]*xmlns:w="urn:schemas_dir.py-microsoft-com:office:excel"|<!--\s*(?:START|END) OF OUTPUT FROM EXCEL PUBLISH AS WEB PAGE WIZARD\s*-->|<div [^>]*x:publishsource="?Excel"?)
         condition: or
         part: body
 
@@ -1979,7 +1979,7 @@ requests:
       - type: regex
         name: microsoft-publisher
         regex:
-          - (?:<html [^>]*xmlns:w="urn:schemas-microsoft-com:office:publisher"|<!--[if pub]><xml>)
+          - (?:<html [^>]*xmlns:w="urn:schemas_dir.py-microsoft-com:office:publisher"|<!--[if pub]><xml>)
         condition: or
         part: body
 

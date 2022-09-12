@@ -18,7 +18,7 @@ requests:
       - type: dsl
         name: composer.lock
         dsl:
-          - "contains(body, 'packages') && contains(tolower(all_headers), 'application/octet-stream') && status_code == 200"
+          - "contains(body, 'packages_dir') && contains(tolower(all_headers), 'application/octet-stream') && status_code == 200"
 
       - type: dsl
         name: composer.json

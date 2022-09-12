@@ -12,7 +12,7 @@ info:
 requests:
   - method: GET
     path:
-      - "{{BaseURL}}/config/packages/security.yaml"
+      - "{{BaseURL}}/config/packages_dir/security.yaml"
       - "{{BaseURL}}/app/config/security.yml"
 
     matchers-condition: and

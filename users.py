@@ -1,13 +1,14 @@
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
 from datetime import datetime, timedelta
 from fastapi import Depends, FastAPI, HTTPException, status,Request
-from packages.database import engine, SessionLocal
+from packages_dir.database import engine, SessionLocal
 from sqlalchemy.orm import Session
-from packages import crud, models, schemas
-models.Base.metadata.create_all(bind=engine)
+from packages_dir import crud, models_dir
+from packages_dir.schemas_dir import User_t
+
+models_dir.Base.metadata.create_all(bind=engine)
 
 # Dependency
 
@@ -81,12 +82,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Dep
     return user
 
 
-async def get_current_active_user(current_user: schemas.User = Depends(get_current_user)):
+async def get_current_active_user(current_user: User_t = Depends(get_current_user)):
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-async def get_current_active_admin(current_user: schemas.User = Depends(get_current_user)):
+async def get_current_active_admin(current_user: User_t = Depends(get_current_user)):
     if  current_user.is_active and current_user.usertype == "admin":
 
         return current_user

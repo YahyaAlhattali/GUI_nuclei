@@ -4,7 +4,7 @@ info:
   name: pfSense Login
   author: idealphase
   severity: info
-  description: free network firewall distribution, based on the FreeBSD operating system with a custom kernel and including third party free software packages for additional functionality.
+  description: free network firewall distribution, based on the FreeBSD operating system with a custom kernel and including third party free software packages_dir for additional functionality.
   reference:
     - https://www.pfsense.org/download/
     - https://www.pfsense.org/getting-started/

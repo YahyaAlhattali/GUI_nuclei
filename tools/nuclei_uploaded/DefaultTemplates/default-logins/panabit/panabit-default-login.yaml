@@ -51,7 +51,7 @@ requests:
         part: body
         words:
           - '<META HTTP-EQUIV=REFRESH CONTENT="0;URL=/index.htm">'
-          - 'urn:schemas-microsoft-com:vml'
+          - 'urn:schemas_dir.py-microsoft-com:vml'
         condition: and
 
       - type: word
