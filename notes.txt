@@ -9,4 +9,4 @@ dbeaver
 bgadmin
 
 =============================================
- rq worker  PycharmProjects/GUI_nuclei/main.py
+ rq worker

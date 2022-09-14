@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 redis_conn = Redis()
-q = Queue(connection=redis_conn)  # no args implies the default queue
+q = Queue('default',connection=redis_conn)  # no args implies the default queue
 
 
 @app.post("/token", response_model=packages_dir.schemas_dir.Token)
@@ -94,17 +94,20 @@ async def start_new_scan(config: schemas.NucleiConfig,
                          User: schemas.User_t = Depends(users.get_current_active_user)):
     # back.add_task(run_nuclei,db,config,current_user)
     try:
-        job = q.enqueue(core_function.run_nuclei,config, db,User)
+        job = q.enqueue(core_function.run_nuclei, args=(config,User), job_timeout="500h")
         #print(job.result)
-        #job = q.enqueue(blengbleng, "Yahya")
+        #job = q.enqueue(blengbleng, "Yahya" ,job_timeout="500h")
     except Exception as e :
-        print(e)
-        time.sleep(5)
+        print(f'Error :>>: {e}')
+        #time.sleep(5)
     # job = q.enqueue( run_nuclei, config.dict(),current_user)
     # blengbleng(config.scan_name)
     return (f'nuclei job')
 
 
 def blengbleng(name):
-    print(name)
+    time.sleep(190)
+    return print("ghghjghjhg")
+
+
 
