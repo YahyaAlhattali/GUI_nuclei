@@ -10,3 +10,4 @@ bgadmin
 
 =============================================
  rq worker
+uvicorn main:app --reload

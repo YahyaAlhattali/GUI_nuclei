@@ -97,9 +97,8 @@ def vulns_to_db(result,scan_id):
            session.add(db_item)
            session.commit()
            session.refresh(db_item)
-           print(f'{json_object["host"]} {json_object["info"]["name"]}')
  subprocess.check_output("rm " + result, shell=True)
- return db_item
+ return "Started"
 
 
 
